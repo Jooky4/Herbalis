@@ -6,18 +6,28 @@ using UnityEngine.UI;
 
 public class Inventory : MonoBehaviour
 {
+
     [SerializeField]
-    private Image[] Slots = new Image[5]; 
+    private Image[] Slots = new Image[3];
+    private Sprite sprite;
 
-    // Start is called before the first frame update
-    void Start()
+
+
+    public bool PutInventory(GameObject gameObject)
     {
-        
+        sprite = gameObject.GetComponent<SpriteRenderer>().sprite;
+
+        for (int index = 0; index < Slots.Length; index++)
+        {
+            if (Slots[index].GetComponent<Image>().sprite == null)
+            {
+                Slots[index].GetComponent<Image>().sprite = sprite;
+                break;
+            }
+        }
+        Destroy(gameObject, 0.1f);
+
+        return false;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

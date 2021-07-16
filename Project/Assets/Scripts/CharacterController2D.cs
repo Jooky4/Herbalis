@@ -31,11 +31,14 @@ public class CharacterController2D : MonoBehaviour
     [SerializeField]
     private bool isLadder = false;     // флаг лесницы
     [SerializeField]
-    private bool isjump = false;       // флаг прыжок
+    //private bool isjump = false;       // флаг прыжок
     public bool isStop = true;
     [SerializeField]
     private bool isInventory;         // флаг предмета инвентаря
     public bool isAction;
+    private GameObject gameObjectInventory;
+    [SerializeField]
+    private Inventory inventory;
 
     // Start is called before the first frame update
     void Start()
@@ -56,10 +59,10 @@ public class CharacterController2D : MonoBehaviour
         if (isStop)
         {
             //UpdateAxis();
-            UpdateFlip();
-            UpdateMoveLadder();
-            Jump();
-            Action();
+            UpdateFlip();       // переворот вправо влево
+            UpdateMoveLadder();    // лазает по лестнице
+            Jump();                  // прыжок
+            Action();              //действие
         }
         else
         {
@@ -73,7 +76,7 @@ public class CharacterController2D : MonoBehaviour
 
     private void FixedUpdate()
     {
-        isGround = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
+        isGround = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);       // чек земли
         if (isStop)
         {
             Move();
@@ -96,21 +99,24 @@ public class CharacterController2D : MonoBehaviour
     /// <summary>
     /// Метод для действия
     /// </summary>
-    void Action()
+    void Action()              // действие
     {
-        if (isInventory)
+        if (isAction)              // нажата клавиша действие
         {
-
-            isAction = false;
-
+            if (isInventory)        // предмет из инвенторя
+            {
+               isInventory = inventory.PutInventory(gameObjectInventory);     //помещаем предмет в инвентарь
+            }
         }
+
+        isAction = false;
     }
 
 
     /// <summary>
     /// Проверка на движение в противополжную сторону
     /// </summary>
-    void UpdateFlip()
+    void UpdateFlip()                          // обновление переворот спрайта
     {
         if (horizontal > 0 && !facingRight)
             Flip();
@@ -160,18 +166,25 @@ public class CharacterController2D : MonoBehaviour
     /// Проверка входа на лесницу
     /// </summary>
     /// <param name="other"></param>
-    void OnTriggerStay2D(Collider2D other)
-    {
-        //if (other.tag == "Ladder")          //(other.gameObject.CompareTag("Ladder"))   // если таг лесница
-        //{
-        //    isLadder = true;     // это лесница
-        //}
+    //void OnTriggerStay2D(Collider2D other)
+    //{
+    //if (other.tag == "Ladder")          //(other.gameObject.CompareTag("Ladder"))   // если таг лесница
+    //{
+    //    isLadder = true;     // это лесница
+    //}
 
-        if (other.gameObject.CompareTag("Inventory"))
+
+
+    // }
+
+    void OnTriggerEnter2D(Collider2D other)                      
+    {
+        if (other.gameObject.CompareTag("Inventory"))            // предмет инвенторя
         {
+            gameObjectInventory = other.gameObject;            
+
             isInventory = true;
         }
-
     }
 
     /// <summary>
@@ -185,7 +198,7 @@ public class CharacterController2D : MonoBehaviour
         //    isLadder = false;
         //}
 
-        if (other.gameObject.CompareTag("Inventory"))
+        if (other.tag == "Inventory") //(other.gameObject.CompareTag("Inventory"))
         {
             isInventory = false;
         }

@@ -7,7 +7,7 @@ public class UICharacterController : MonoBehaviour
     [SerializeField]
     public GameObject prefabPlayer;
     private CharacterController2D characterController2D;
-    private bool directionRight = true;
+    //private bool directionRight = true;
     private bool onMoving;
     private bool OnMakeJump;
     public KeyCode action = KeyCode.E; // клавиша действия
@@ -24,7 +24,8 @@ public class UICharacterController : MonoBehaviour
         Die = 4,
         Up = 5,
         Down = 6,
-        Action = 7
+        Action = 7,
+        Pause = 8
 
     }
 
@@ -36,11 +37,11 @@ public class UICharacterController : MonoBehaviour
 
     private void Update()
     {
-        UpdateKeys("d",ActionType.MoveRight );
+        UpdateKeys("d", ActionType.MoveRight);
         UpdateKeys("a", ActionType.MoveLeft);
         UpdateKeys("w", ActionType.Up);
         UpdateKeys("s", ActionType.Down);
-       // UpdateKeys("space", ActionType.Jump);
+        // UpdateKeys("space", ActionType.Jump);
 
         if (Input.GetButtonDown("Jump"))     // прыжок
         {
@@ -74,7 +75,7 @@ public class UICharacterController : MonoBehaviour
 
     public void OnDoAction(ActionType action)
     {
-        Debug.Log("Действие" + action);
+        //  Debug.Log("Действие" + action);
         switch (action)
         {
             case ActionType.None:
@@ -99,6 +100,10 @@ public class UICharacterController : MonoBehaviour
 
             case ActionType.Jump:
                 characterController2D.Jumped = true;
+                break;
+
+            case ActionType.Action:
+                characterController2D.isAction = true;
                 break;
         }
     }
